@@ -12,51 +12,51 @@ namespace Chess.GameMechanics
     {
         static int PhantomWhiteKingIndex;
        static  int PhantomBlackKingIndex;
-        public static bool CanThisBlock(int i, string id)
+        public static bool CanThisBlock(int i, string id,title[] Board, int BlackKingIndex, int WhiteKingIndex)
         {
             int[] displaySelectable;
             switch (id)
             {
                 case "pawn":
-                    displaySelectable = pawn.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = pawn.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board,BlackKingIndex, WhiteKingIndex);
 
                 case "queen":
-                    displaySelectable = queen.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = queen.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board, BlackKingIndex, WhiteKingIndex);
 
                 case "king":
-                    displaySelectable = king.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = king.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board, BlackKingIndex, WhiteKingIndex);
 
 
                 case "castle":
-                    displaySelectable = castle.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = castle.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board, BlackKingIndex, WhiteKingIndex);
 
                 case "horse":
-                    displaySelectable = horse.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = horse.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board, BlackKingIndex, WhiteKingIndex);
 
                 case "bishop":
-                    displaySelectable = bishop.CanMove(Table.actualDeck, i, Table.actualDeck[i].colorOfFigure);
-                    return CanThisFigureBlock(displaySelectable, i);
+                    displaySelectable = bishop.CanMove(Board, i, Board[i].colorOfFigure);
+                    return CanThisFigureBlock(displaySelectable, i, Board, BlackKingIndex, WhiteKingIndex);
 
             }
             return false;
         }
         
-        private static bool CanThisFigureBlock(int[] GoArr, int j)
+        private static bool CanThisFigureBlock(int[] GoArr, int j,title[] Board, int BlackKingIndex, int WhiteKingIndex)
         {
-            title[] phantomDeck = Table.actualDeck;
+            title[] phantomDeck = Board;
             for (int i = 0; i < GoArr.Length; i++)
             {
-                if (FigureMover(GoArr[i], j, phantomDeck)) return true;
+                if (FigureMover(GoArr[i], j, phantomDeck, BlackKingIndex, WhiteKingIndex)) return true;
             }
             return false;
         }
      
-        public static bool FigureMover(int newPos, int prevPos, title[] arr)
+        public static bool FigureMover(int newPos, int prevPos, title[] arr, int BlackKingIndex, int WhiteKingIndex)
         {
             PhantomWhiteKingIndex = Table.whiteKingIndex;
             PhantomBlackKingIndex = Table.blackKingIndex;
@@ -64,11 +64,11 @@ namespace Chess.GameMechanics
             string ID = arr[newPos].Id_Of_Figure;
             string FC = arr[newPos].firstColorOfFigure;
             TwoFigureChanger(newPos, prevPos, arr);
-            if (calculateIfProtected(arr[newPos].colorOfFigure, arr))
+            if (calculateIfProtected(arr[newPos].colorOfFigure, arr, PhantomBlackKingIndex, PhantomWhiteKingIndex))
             {
-                arr[prevPos].Id_Of_Figure = Table.actualDeck[newPos].Id_Of_Figure;
-                arr[prevPos].colorOfFigure = Table.actualDeck[newPos].colorOfFigure;
-                arr[prevPos].firstColorOfFigure = Table.actualDeck[newPos].firstColorOfFigure;
+                arr[prevPos].Id_Of_Figure = arr[newPos].Id_Of_Figure;
+                arr[prevPos].colorOfFigure = arr[newPos].colorOfFigure;
+                arr[prevPos].firstColorOfFigure = arr[newPos].firstColorOfFigure;
                 arr[newPos].Id_Of_Figure = ID;
                 arr[newPos].colorOfFigure = colorF;
                 arr[newPos].firstColorOfFigure = FC;
@@ -86,19 +86,19 @@ namespace Chess.GameMechanics
 
         }
    
-        public static bool calculateIfProtected(string color, title[] arr)
+        public static bool calculateIfProtected(string color, title[] arr, int BlackKingIndex, int WhiteKingIndex)
         {
 
             if (color == "white")
             {
                 //   if (Table.isCheckmateWhite == false) return false;
-                return TableSelectors.Plunk("black", Table.actualDeck, Table.whiteKingIndex);
+                return TableSelectors.Plunk("black", arr, WhiteKingIndex);
 
             }
             else
             {
                 //   if (Table.isCheckmateBlack == false) return false;
-                return TableSelectors.Plunk("white", Table.actualDeck, Table.blackKingIndex);
+                return TableSelectors.Plunk("white", arr, BlackKingIndex);
 
             }
 

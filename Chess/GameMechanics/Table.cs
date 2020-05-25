@@ -158,8 +158,7 @@ namespace Chess.GameMechanics
                         actualDeck[indexK].ChangeTitle();
                      }
                     selectedTiles.Clear();
-                    Select(index);
-                    selectedTiles.RemoveAt(0);
+                   
                     actualDeck[index].ChangeTitle();
                     TableSelectors.ChangeFigureTargets(actualDeck[index],index);
   
@@ -198,7 +197,7 @@ namespace Chess.GameMechanics
             {
                 for(int j = 0; j < actualDeck.Length; j++)
                 {
-                    if (actualDeck[j].colorOfFigure==color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure)) return false;
+                    if (actualDeck[j].colorOfFigure==color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure,actualDeck,blackKingIndex,whiteKingIndex)) return false;
 
                 }
               
@@ -207,7 +206,7 @@ namespace Chess.GameMechanics
             {
                 for (int j = 0; j < actualDeck.Length; j++)
                 {
-                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure)) return false;
+                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure, actualDeck, blackKingIndex, whiteKingIndex)) return false;
 
                 }
             }

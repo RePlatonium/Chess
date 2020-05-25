@@ -84,7 +84,7 @@ namespace Chess.GameMechanics
         static double[] horseWhitePositionValue = horseBlackPositionValue;
         static double[] queenWhitePositionValue = queenBlackPositionValue;
         static double[] kingWhitePositionValue = kingBlackPositionValue;
-        static int depth = 1;
+        public static int depth = 2;
         static double currentBestValue = 0;
         static double currentDeckCost = 0;
         static List<int> TargetedByWhiteTiles = new List<int>();
@@ -103,6 +103,8 @@ namespace Chess.GameMechanics
             double BestMove = 99999;
             int BestOldPosition = 0;
             int BestNewBosition = 0;
+            bool TurnOfWhite = false;
+   
             int PhantomWhiteKingPosition = Table.whiteKingIndex;
             int PhantomBlackKingPosition = Table.blackKingIndex;
             bool CheckmateBlack = Table.isCheckmateBlack;
@@ -116,7 +118,7 @@ namespace Chess.GameMechanics
                 int[] CurrentFigurePossibleMoves = PossibleMoves[i];
                 for(int j=0;j< CurrentFigurePossibleMoves.Length; j++)
                 {
-                    double NewCost = CostAfterFigureMove(Board, i, CurrentFigurePossibleMoves[j], depth, BestMove, PhantomBlackKingPosition, PhantomWhiteKingPosition, CheckmateBlack, CheckMateWhite, 99999);
+                    double NewCost = CostAfterFigureMove(Board, i, CurrentFigurePossibleMoves[j], depth, TurnOfWhite, PhantomBlackKingPosition, PhantomWhiteKingPosition);
                     if (NewCost <= BestMove)
                     {
                         BestMove = NewCost;
@@ -125,6 +127,7 @@ namespace Chess.GameMechanics
                     }
                     Table.isCheckmateBlack = CheckmateBlack;
                     Table.isCheckmateWhite = CheckMateWhite;
+                    
                 }
             }
 
@@ -133,12 +136,11 @@ namespace Chess.GameMechanics
         }
         
   
-        static double CostAfterFigureMove(title[] deck,int OldPosition,int NewPosition,int depth,double bestValue,int BlackKingIndex,int WhiteKingIndex,bool BlackCheck,bool WhiteCheck,double Best)
+        static double CostAfterFigureMove(title[] deck,int OldPosition,int NewPosition,int depth,bool TurnOfWhite,int BlackKingIndex,int WhiteKingIndex)
         {
            
-            int BlackKing = BlackKingIndex;
-            int WhiteKing = WhiteKingIndex;
             double value = 0;
+            TurnOfWhite = !TurnOfWhite;
             string colorF = deck[NewPosition].colorOfFigure;
             string ID = deck[NewPosition].Id_Of_Figure;
             string FC = deck[NewPosition].firstColorOfFigure;
@@ -150,42 +152,29 @@ namespace Chess.GameMechanics
             deck[OldPosition].firstColorOfFigure = " ";
             if (deck[NewPosition].Id_Of_Figure == "king")
             {
-                if (deck[NewPosition].colorOfFigure == "white") WhiteKing = NewPosition;
-                else BlackKing = NewPosition;
+                if (deck[NewPosition].colorOfFigure == "white") BlackKingIndex = NewPosition;
+                else WhiteKingIndex = NewPosition;
             }
-            double val=GetDeckValue(deck);
-         if (deck[NewPosition].colorOfFigure=="white") Table.isCheckmateBlack=IsCheckMate(deck[NewPosition].Id_Of_Figure, deck[NewPosition].colorOfFigure, deck, NewPosition, BlackKingIndex);
-           else Table.isCheckmateWhite=IsCheckMate(deck[NewPosition].Id_Of_Figure, deck[NewPosition].colorOfFigure, deck, NewPosition, WhiteKingIndex);
-         //Поверяй равенство добавленой клетки с клеткой короля.
-            List<int> targets1 = new List<int>();
-            string color = "white";
-            if (deck[NewPosition].colorOfFigure == "white") color = "black";
-            if ((deck[NewPosition].colorOfFigure == "white" && Table.isCheckmateWhite == true)) value = -99999;
-            else if (deck[NewPosition].colorOfFigure == "black" && Table.isCheckmateBlack == true) value = 99999;
-           
-
-            if (depth == 0 && Table.isCheckmateBlack==true && GG("black",deck)) value = 99999;
-            else if (depth == 0 || ((deck[NewPosition].colorOfFigure == "white" && val < Best) || (deck[NewPosition].colorOfFigure == "black" && val > Best))) value = val;
-            else if(Table.isCheckmateWhite==true && GG("white", deck)) value = -99999;
-            else if (deck[NewPosition].colorOfFigure == "black") value = CalculateFutureCost(deck, depth, "white", BlackKing, WhiteKing, Table.isCheckmateBlack, Table.isCheckmateWhite);
-            else if (deck[NewPosition].colorOfFigure == "white") value = CalculateFutureCost(deck, depth, "black", BlackKing, WhiteKing, Table.isCheckmateBlack, Table.isCheckmateWhite);
-          
-
+          //  double val = GetDeckValue(deck);
+            if (depth == 0) value = GetDeckValue(deck);
+            else if (TurnOfWhite ) value = CalculateFutureCost(deck, depth, "white", BlackKingIndex, WhiteKingIndex, TurnOfWhite);
+            else if(!TurnOfWhite) value = CalculateFutureCost(deck, depth, "black", BlackKingIndex, WhiteKingIndex, TurnOfWhite);
             deck[OldPosition].Id_Of_Figure = deck[NewPosition].Id_Of_Figure;
             deck[OldPosition].colorOfFigure = deck[NewPosition].colorOfFigure;
             deck[OldPosition].firstColorOfFigure = deck[NewPosition].firstColorOfFigure;
             deck[NewPosition].Id_Of_Figure = ID;
             deck[NewPosition].colorOfFigure = colorF;
             deck[NewPosition].firstColorOfFigure = FC;
+    
             return value;
         }
-        public static bool GG(string color,title[] actualDeck)
+        public static bool GG(string color,title[] actualDeck,int BlackKingIndex, int WhiteKingIndex)
         {
             if (color == "white")
             {
                 for (int j = 0; j < actualDeck.Length; j++)
                 {
-                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure)) return false;
+                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure, actualDeck, BlackKingIndex, WhiteKingIndex)) return false;
 
                 }
 
@@ -194,33 +183,35 @@ namespace Chess.GameMechanics
             {
                 for (int j = 0; j < actualDeck.Length; j++)
                 {
-                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure)) return false;
+                    if (actualDeck[j].colorOfFigure == color && PhantomTable.CanThisBlock(j, actualDeck[j].Id_Of_Figure, actualDeck, BlackKingIndex, WhiteKingIndex)) return false;
 
                 }
             }
             return true;
         }
-        static double CalculateFutureCost(title[] deck,int depth,string color, int BlackKingIndex, int WhiteKingIndex, bool BlackCheck, bool WhiteCheck)
+        static double CalculateFutureCost(title[] deck,int depth,string color, int BlackKingIndex, int WhiteKingIndex,bool TurnOfWhite)
         {
             double value;
             if (color == "white")
             {
                 value = -99999;
+                int PhantomWhiteKingPosition = WhiteKingIndex;
+                int PhantomBlackKingPosition = BlackKingIndex;
                 Dictionary<int, int[]> PossibleMoves = GetPossibleMoves(deck, "white");
-                double alpha = GetDeckValue(deck);
+            //    double alpha = GetDeckValue(deck);
                 for (int i = 0; i <= PossibleMoves.Keys.Max(); i++)
                 {
                     if (!PossibleMoves.ContainsKey(i)) continue;
                     int[] CurrentFigurePossibleMoves = PossibleMoves[i];
                     for (int j = 0; j < CurrentFigurePossibleMoves.Length; j++)
                     {
-                        double NewCost = CostAfterFigureMove(deck, i, CurrentFigurePossibleMoves[j], depth - 1, value, BlackKingIndex, WhiteKingIndex, BlackCheck, WhiteCheck, alpha);
+                        double NewCost = CostAfterFigureMove(deck, i, CurrentFigurePossibleMoves[j], depth - 1, TurnOfWhite, BlackKingIndex, WhiteKingIndex);
                         if (NewCost >= value)
                         {
                             value = NewCost;
                         }
-                        Table.isCheckmateBlack = BlackCheck;
-                        Table.isCheckmateWhite = WhiteCheck;
+           
+                    
                     }
                 }
 
@@ -231,22 +222,24 @@ namespace Chess.GameMechanics
             {
               
                 value = 99999;
+                int PhantomWhiteKingPosition = Table.whiteKingIndex;
+                int PhantomBlackKingPosition = Table.blackKingIndex;
                 Dictionary<int, int[]> PossibleMoves = GetPossibleMoves(deck, "black");
-                double alpha = GetDeckValue(deck);
+            //    double alpha = GetDeckValue(deck);
                 for (int i = 0; i <= PossibleMoves.Keys.Max(); i++)
                 {
                     if (!PossibleMoves.ContainsKey(i)) continue;
                     int[] CurrentFigurePossibleMoves = PossibleMoves[i];
                     for (int j = 0; j < CurrentFigurePossibleMoves.Length; j++)
                     {
-                        double NewCost = CostAfterFigureMove(deck, i, CurrentFigurePossibleMoves[j], depth-1, value, BlackKingIndex, WhiteKingIndex, BlackCheck, WhiteCheck, alpha);
+                        double NewCost = CostAfterFigureMove(deck, i, CurrentFigurePossibleMoves[j], depth-1, TurnOfWhite, BlackKingIndex, WhiteKingIndex);
                         if (NewCost <= value)
                         {
                             value = NewCost;
                            
                         }
-                        Table.isCheckmateBlack = BlackCheck;
-                        Table.isCheckmateWhite = WhiteCheck;
+                      
+                  
                     }
                 }
                 return value;

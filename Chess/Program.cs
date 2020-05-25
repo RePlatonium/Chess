@@ -39,10 +39,12 @@ namespace Chess
             
                     AI.MakeAEasyMove(win);
                     win.Clear();
+                  
                     table.Draw(win);
                     win.Display();
                     Table.turnOfPlayer = "white";
-              
+                 
+
                 }
 
             }
@@ -80,6 +82,7 @@ namespace Chess
                             selected = i;
                             table.Select(i);
                             table.Draw(win);
+                        
                             win.Display();
                         }
                     }
@@ -120,7 +123,7 @@ namespace Chess
         string  TransferTurn(string c)
             {
               
-                    if (c == "black")
+                if (c == "black")
                     {
                     if (Table.isCheckmateWhite == true && Table.GG("white"))
                     {

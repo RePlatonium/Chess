@@ -31,3 +31,14 @@ C:\Users\LightFire\Desktop\ДЗ\Курсач\Backup\Chess\obj\Debug\Chess.csproj
 C:\Users\LightFire\Desktop\ДЗ\Курсач\Backup\Chess\obj\Debug\Chess.csproj.CopyComplete
 C:\Users\LightFire\Desktop\ДЗ\Курсач\Backup\Chess\obj\Debug\Chess.exe
 C:\Users\LightFire\Desktop\ДЗ\Курсач\Backup\Chess\obj\Debug\Chess.pdb
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\Chess.exe.config
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\Chess.exe
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\Chess.pdb
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\sfml-audio.dll
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\sfml-graphics.dll
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\sfml-system.dll
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\bin\Debug\sfml-window.dll
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\obj\Debug\Chess.csprojAssemblyReference.cache
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\obj\Debug\Chess.csproj.CopyComplete
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\obj\Debug\Chess.exe
+C:\Users\LightFire\Desktop\Новая папка (6)\Chess\obj\Debug\Chess.pdb

@@ -32,6 +32,11 @@ namespace Chess.GameMechanics
         public static Text ToMainMenu = new Text("В главное меню", font, 60);
 
 
+        public static Text Level = new Text("Уровень сложности", font, 60);
+        public static Text Level1 = new Text("Легко", font, 60);
+        public static Text Level2 = new Text("Нормально", font, 60);
+
+
        public static int menuPage = 0;
 
         public static void DrawMainMenu(RenderWindow win)
@@ -123,6 +128,7 @@ namespace Chess.GameMechanics
             else if (menuPage == 1 && VersusAI.GetGlobalBounds().Contains(mouse.X, mouse.Y))
             {
                 menuPage = -1;
+                AICalculations_2.depth = 2;
                 Versus_AI = true;
                 GameInProgress = true;
                 AICalculations_2.AIStart();
@@ -130,6 +136,8 @@ namespace Chess.GameMechanics
                 table.Draw(win);
                 win.Display();
             }
+    
+
             else if(menuPage==2 && SkinSet1.GetGlobalBounds().Contains(mouse.X, mouse.Y))
             {
                 win.Clear();

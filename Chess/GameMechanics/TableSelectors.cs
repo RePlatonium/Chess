@@ -66,13 +66,14 @@ namespace Chess.GameMechanics
                     if (title.colorOfFigure == "black")
                     {
                         queen.blackTargets.Clear();
-                        queen.blackTargets.AddRange(Table.selectedTiles);
+                       
+                        queen.blackTargets.AddRange(queen.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         ChangeTargets("black");
                     }
                     else
                     {
                         queen.whiteTargets.Clear();
-                        queen.whiteTargets.AddRange(Table.selectedTiles);
+                        queen.whiteTargets.AddRange(queen.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         ChangeTargets("white");
                     }
                     break;
@@ -80,13 +81,13 @@ namespace Chess.GameMechanics
                     if (title.colorOfFigure == "black")
                     {
                         king.blackTargets.Clear();
-                        king.blackTargets.AddRange(Table.selectedTiles);
+                        king.blackTargets.AddRange(king.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         ChangeTargets("black");
                     }
                     else
                     {
                         king.whiteTargets.Clear();
-                        king.whiteTargets.AddRange(Table.selectedTiles);
+                        king.whiteTargets.AddRange(king.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         ChangeTargets("white");
                     }
                     break;
@@ -96,13 +97,13 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             castle.blackBTargets.Clear();
-                            castle.blackBTargets.AddRange(Table.selectedTiles);
+                            castle.blackBTargets.AddRange(castle.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
 
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             castle.blackWTargets.Clear();
-                            castle.blackWTargets.AddRange(Table.selectedTiles);
+                            castle.blackWTargets.AddRange(castle.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         ChangeTargets("black");
                     }
@@ -111,12 +112,12 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             castle.whiteBTargets.Clear();
-                            castle.whiteBTargets.AddRange(Table.selectedTiles);
+                            castle.whiteBTargets.AddRange(castle.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             castle.whiteWTargets.Clear();
-                            castle.whiteWTargets.AddRange(Table.selectedTiles);
+                            castle.whiteWTargets.AddRange(castle.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         ChangeTargets("white");
                     }
@@ -127,13 +128,13 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             horse.blackBTargets.Clear();
-                            horse.blackBTargets.AddRange(Table.selectedTiles);
+                            horse.blackBTargets.AddRange(horse.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
 
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             horse.blackWTargets.Clear();
-                            horse.blackWTargets.AddRange(Table.selectedTiles);
+                            horse.blackWTargets.AddRange(horse.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         ChangeTargets("black");
                     }
@@ -142,12 +143,12 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             horse.whiteBTargets.Clear();
-                            horse.whiteBTargets.AddRange(Table.selectedTiles);
+                            horse.whiteBTargets.AddRange(horse.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             horse.whiteWTargets.Clear();
-                            horse.whiteWTargets.AddRange(Table.selectedTiles);
+                            horse.whiteWTargets.AddRange(horse.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         ChangeTargets("white");
                     }
@@ -158,12 +159,12 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             bishop.blackBTargets.Clear();
-                            bishop.blackBTargets.AddRange(Table.selectedTiles);
+                            bishop.blackBTargets.AddRange(bishop.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             bishop.blackWTargets.Clear();
-                            bishop.blackWTargets.AddRange(Table.selectedTiles);
+                            bishop.blackWTargets.AddRange(bishop.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         ChangeTargets("black");
                     }
@@ -172,12 +173,12 @@ namespace Chess.GameMechanics
                         if (title.firstColorOfFigure == "black")
                         {
                             bishop.whiteBTargets.Clear();
-                            bishop.whiteBTargets.AddRange(Table.selectedTiles);
+                            bishop.whiteBTargets.AddRange(bishop.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                         else if (title.firstColorOfFigure == "white")
                         {
                             bishop.whiteWTargets.Clear();
-                            bishop.whiteWTargets.AddRange(Table.selectedTiles);
+                            bishop.whiteWTargets.AddRange(bishop.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
                        ChangeTargets("white");
                     }
@@ -339,11 +340,36 @@ namespace Chess.GameMechanics
        internal static List<int> PawnTargets(title[] arr,string color)
         {
             List<int> targets = new List<int>();
-
-            for(int i = 0; i < arr.Length; i++)
+            int endNumber = 0;
+            int modifier = 1;
+            if (color == "black")
             {
-                if (arr[i].colorOfFigure == color && arr[i].Id_Of_Figure == "pawn") targets.AddRange(pawn.CanMove(arr, i, color));
+                endNumber = 56;
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (i < endNumber && arr[i].colorOfFigure == color && arr[i].Id_Of_Figure == "pawn")
+                    {
+                        targets.Add(i + 9 * modifier);
+                        targets.Add(i + 7 * modifier);
+                       
+                    }
+                }
             }
+            else
+            {
+                endNumber = 7;
+                modifier = -1;
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (i < endNumber && arr[i].colorOfFigure == color && arr[i].Id_Of_Figure == "pawn")
+                    {
+                        targets.Add(i + 9 * modifier);
+                        targets.Add(i + 7 * modifier);
+
+                    }
+                }
+            }
+        
 
             return targets;
         }

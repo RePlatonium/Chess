@@ -25,8 +25,16 @@ namespace Chess.GameMechanics
                 MakeARandoMmove(win);
                 return;
             }
-            TableSelectors.FigureMover(move[1], move[0], win);
+      
+          
+           if( !TableSelectors.FigureMover(move[1], move[0], win))
+            {
+                MakeARandoMmove(win);
+                return;
+            }
+        
             TableSelectors.ChangeFigureTargets(Table.actualDeck[move[1]], move[1]);
+          
         }
        public static void MakeARandoMmove(RenderWindow win)
         {
