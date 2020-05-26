@@ -218,15 +218,21 @@ namespace Chess.GameMechanics
         {
             Versus_AI = false;
             GameInProgress = false;
-        Image im = new Image(900, 100,Color.White);
+            uint alignLeft = 13;
+        Image im = new Image(920, 100,Color.White);
             Sprite sp = new Sprite(new Texture(im));
             string winner = " ";
-            if (color == "white") winner = "белые";
-            else winner = "черные";
-             Text GG = new Text("Поздавляем с победой"+","+winner+"!", font, 64);
-            GG.Position = new Vector2f(10, 350);
+            if (color == "white") winner = "Поздавляем с победой" + "," + "белые" + "!";
+           else if (color == "black") winner = "Поздавляем с победой" + "," + "черные" + "!";
+            else
+            {
+                winner = "Поражение!";
+                alignLeft = 300;
+            }
+             Text GG = new Text(winner, font, 62);
+            GG.Position = new Vector2f(alignLeft, 350);
             GG.Color = Color.Black;
-            sp.Position = GG.Position;
+            sp.Position = new Vector2f(0, 350);
             win.Draw(sp);
             win.Draw(GG);
             win.Display();

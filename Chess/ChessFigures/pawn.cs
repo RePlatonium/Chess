@@ -123,6 +123,11 @@ namespace Chess.ChessFigures
         }
         public static void transformation(title tit,RenderWindow win,int i)
         {
+            if (MainMenu.Versus_AI == true && tit.colorOfFigure=="black")
+            {
+                Table.actualDeck[i].Id_Of_Figure = "queen";
+                return;
+            }
             transformIndex = i;
             inTransformation = true;
             float Ypos;

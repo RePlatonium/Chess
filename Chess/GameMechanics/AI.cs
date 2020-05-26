@@ -23,8 +23,6 @@ namespace Chess.GameMechanics
             if (move[1] == move[0])
             {
                 MakeARandoMmove(win);
-
-
                 return;
             }
             if (!TableSelectors.FigureMover(move[1], move[0], win) ||( move[0]==7 && move[1]==6))
