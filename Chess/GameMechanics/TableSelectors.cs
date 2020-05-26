@@ -44,7 +44,7 @@ namespace Chess.GameMechanics
                 if (Table.whiteTargets.Contains(Table.blackKingIndex)) Table.isCheckmateBlack = true;
             }
         }
-        internal static void ChangeFigureTargets(title title,int index)
+        internal static void ChangeFigureTargets(title title, int index)
         {
             switch (title.Id_Of_Figure)
             {
@@ -66,7 +66,7 @@ namespace Chess.GameMechanics
                     if (title.colorOfFigure == "black")
                     {
                         queen.blackTargets.Clear();
-                       
+
                         queen.blackTargets.AddRange(queen.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         ChangeTargets("black");
                     }
@@ -80,14 +80,62 @@ namespace Chess.GameMechanics
                 case "king":
                     if (title.colorOfFigure == "black")
                     {
+                        title[] arr = Table.actualDeck;
+                        int i = index;
                         king.blackTargets.Clear();
-                        king.blackTargets.AddRange(king.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
+                        try
+                        {
+                            if ((arr[i + 8].Id_Of_Figure == " ") && arr[i].sp.Position.Y + title.titleHeight == arr[i + 8].sp.Position.Y) king.blackTargets.Add(i + 8);
+                            if ((arr[i + 9].Id_Of_Figure == " " )  && arr[i].sp.Position.Y + title.titleHeight == arr[i + 9].sp.Position.Y) king.blackTargets.Add(i + 9);
+                            if ((arr[i + 7].Id_Of_Figure == " ")  && arr[i].sp.Position.Y + title.titleHeight == arr[i + 7].sp.Position.Y) king.blackTargets.Add(i + 7);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            if ((arr[i - 8].Id_Of_Figure == " ")  && arr[i].sp.Position.Y - title.titleHeight == arr[i - 8].sp.Position.Y) king.blackTargets.Add(i - 8);
+                            if ((arr[i - 9].Id_Of_Figure == " ") && arr[i].sp.Position.Y - title.titleHeight == arr[i - 9].sp.Position.Y) king.blackTargets.Add(i - 9);
+                            if ((arr[i - 7].Id_Of_Figure == " ") && arr[i].sp.Position.Y - title.titleHeight == arr[i - 7].sp.Position.Y) king.blackTargets.Add(i - 7);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            if ((arr[i + 1].Id_Of_Figure == " ")  && arr[i].sp.Position.Y == arr[i + 1].sp.Position.Y) king.blackTargets.Add(i + 1);
+                            if ((arr[i - 1].Id_Of_Figure == " ")  && arr[i].sp.Position.Y == arr[i - 1].sp.Position.Y) king.blackTargets.Add(i - 1);
+                        }
+                        catch { }
+                      
                         ChangeTargets("black");
                     }
                     else
                     {
+                        title[] arr = Table.actualDeck;
+                        int i = index;
                         king.whiteTargets.Clear();
-                        king.whiteTargets.AddRange(king.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
+                        try
+                        {
+                            if ((arr[i + 8].Id_Of_Figure == " ") && arr[i].sp.Position.Y + title.titleHeight == arr[i + 8].sp.Position.Y) king.whiteTargets.Add(i + 8);
+                            if ((arr[i + 9].Id_Of_Figure == " ") && arr[i].sp.Position.Y + title.titleHeight == arr[i + 9].sp.Position.Y) king.whiteTargets.Add(i + 9);
+                            if ((arr[i + 7].Id_Of_Figure == " ") && arr[i].sp.Position.Y + title.titleHeight == arr[i + 7].sp.Position.Y) king.whiteTargets.Add(i + 7);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            if ((arr[i - 8].Id_Of_Figure == " ") && arr[i].sp.Position.Y - title.titleHeight == arr[i - 8].sp.Position.Y) king.whiteTargets.Add(i - 8);
+                            if ((arr[i - 9].Id_Of_Figure == " ") && arr[i].sp.Position.Y - title.titleHeight == arr[i - 9].sp.Position.Y) king.whiteTargets.Add(i - 9);
+                            if ((arr[i - 7].Id_Of_Figure == " ") && arr[i].sp.Position.Y - title.titleHeight == arr[i - 7].sp.Position.Y) king.whiteTargets.Add(i - 7);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            if ((arr[i + 1].Id_Of_Figure == " ") && arr[i].sp.Position.Y == arr[i + 1].sp.Position.Y) king.whiteTargets.Add(i + 1);
+                            if ((arr[i - 1].Id_Of_Figure == " ") && arr[i].sp.Position.Y == arr[i - 1].sp.Position.Y) king.whiteTargets.Add(i - 1);
+                        }
+                        catch { }
+
                         ChangeTargets("white");
                     }
                     break;
@@ -180,13 +228,13 @@ namespace Chess.GameMechanics
                             bishop.whiteWTargets.Clear();
                             bishop.whiteWTargets.AddRange(bishop.CanMove(Table.actualDeck, index, Table.actualDeck[index].colorOfFigure));
                         }
-                       ChangeTargets("white");
+                        ChangeTargets("white");
                     }
                     break;
             }
             for (int k = 0; k < Table.selectedTiles.Count; k++)
             {
-               Table.actualDeck[Table.selectedTiles[k]].ChangeTitle();
+                Table.actualDeck[Table.selectedTiles[k]].ChangeTitle();
 
                 if (Table.actualDeck[index].colorOfFigure == "black" && Table.selectedTiles.Contains(Table.whiteKingIndex)) Table.isCheckmateWhite = true;
                 else if (Table.actualDeck[index].colorOfFigure == "white" && Table.selectedTiles.Contains(Table.blackKingIndex)) Table.isCheckmateBlack = true;
@@ -254,13 +302,13 @@ namespace Chess.GameMechanics
      
             if (color == "white")
             {
-                  if (Table.isCheckmateWhite == false) return false;
+                  if (Table.isCheckmateWhite == false && 47<Table.whiteKingIndex && Table.whiteKingIndex <= 63) return false;
                 return Plunk("black",Table.actualDeck,Table.whiteKingIndex);
                
             }
             else
             {
-                  if (Table.isCheckmateBlack == false) return false;
+                  if (Table.isCheckmateBlack == false && 0 < Table.blackKingIndex && Table.blackKingIndex <= 15) return false;
                 return  Plunk("white", Table.actualDeck, Table.blackKingIndex);
                
             }
@@ -351,7 +399,7 @@ namespace Chess.GameMechanics
                     {
                         targets.Add(i + 9 * modifier);
                         targets.Add(i + 7 * modifier);
-                       
+
                     }
                 }
             }
@@ -369,9 +417,9 @@ namespace Chess.GameMechanics
                     }
                 }
             }
-        
+
 
             return targets;
         }
-        }
+    }
 }

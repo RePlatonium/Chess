@@ -23,18 +23,16 @@ namespace Chess.GameMechanics
             if (move[1] == move[0])
             {
                 MakeARandoMmove(win);
+
+
                 return;
             }
-      
-          
-           if( !TableSelectors.FigureMover(move[1], move[0], win))
+            if (!TableSelectors.FigureMover(move[1], move[0], win) ||( move[0]==7 && move[1]==6))
             {
                 MakeARandoMmove(win);
                 return;
             }
-        
             TableSelectors.ChangeFigureTargets(Table.actualDeck[move[1]], move[1]);
-          
         }
        public static void MakeARandoMmove(RenderWindow win)
         {
@@ -42,17 +40,30 @@ namespace Chess.GameMechanics
             bool selectedIndex = false;
             table = Table.actualDeck;
             
-            while (selectedIndex == false)
-            {
+            
                 Random rand = new Random();
-                int index = rand.Next(0, 64);
-                if (table[index].colorOfFigure != "black") continue;
-                int[] indexes = CanMove(index);
-                if (indexes.Length==0 || indexes[0] == -1) continue;
-                int newTitle = ChooseRandomly(indexes);
-                if (!TableSelectors.FigureMover(newTitle, index, win)) continue;
-                selectedIndex = true;
-            }
+                int[] arr = new int[64];
+                int j = 1;
+            for(int i = 0; i < arr.Length; i++)
+                {
+                    arr[i] = i;
+                }
+            int ControlledRandom = 64;
+                for (int i = 0; ; i++)
+                {
+                    int index = rand.Next(0, ControlledRandom);
+                    if (table[index].colorOfFigure != "black") continue;
+                    int[] indexes = CanMove(index);
+                    if (indexes.Length == 0 || indexes[0] == -1) continue;
+                    int newTitle = ChooseRandomly(indexes);
+                    if (TableSelectors.FigureMover(newTitle, index, win)) break;
+                int a = index;
+                arr[index] = arr[arr.Length - j];
+                arr[arr.Length - j] = index;
+                j++;
+                ControlledRandom--;
+                }
+            
 
         }
        static int[] CanMove(int i)

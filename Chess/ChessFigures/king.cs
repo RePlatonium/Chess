@@ -71,8 +71,6 @@ namespace Chess.ChessFigures
                 arr[number].firstColorOfFigure = " ";
                 arr[prevPos + 1].Id_Of_Figure = "castle";
                 arr[prevPos + 1].colorOfFigure = color;
-
-               
             }
             else if (cof == -2)
             {
@@ -89,8 +87,6 @@ namespace Chess.ChessFigures
                 arr[number].firstColorOfFigure = " ";
                 arr[prevPos - 1].Id_Of_Figure = "castle";
                 arr[prevPos - 1].colorOfFigure = color;
-
-               
             }
             if (arr[newPos].colorOfFigure == "black") Table.blackKingIndex = newPos;
             else Table.whiteKingIndex = newPos;
